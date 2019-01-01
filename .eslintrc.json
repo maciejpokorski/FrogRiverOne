@@ -1,0 +1,15 @@
+{
+    "env": {
+        "jest": true
+    },
+    "rules": {
+        "linebreak-style": "off"
+    },
+    "extends": "eslint:recommended",
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": true,
+      "codeFrame": true
+    }
+}
