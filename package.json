@@ -4,7 +4,8 @@
   "description": "Codility couting elements lesson",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "babel src/index.js -d dest/"
   },
   "author": "Maciej Pokorski",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "babel-core": "^6.26.3",
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
