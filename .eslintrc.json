@@ -5,6 +5,9 @@
     "rules": {
         "linebreak-style": "off"
     },
+    "plugins": [
+        "flowtype"
+    ],
     "extends": "eslint:recommended",
     "parser": "babel-eslint",
     "parserOptions": {
