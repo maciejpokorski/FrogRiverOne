@@ -6,7 +6,7 @@ test('5, [1, 3, 1, 4, 2, 3, 5, 4], 6', () => {
     expect(solution(X, A)).toEqual(6);
 });
 
-test.only('1, [1], 0', () => {
+test('1, [1], 0', () => {
     const X = 1;
     const A = [1];
     expect(solution(X, A)).toEqual(0);
@@ -24,9 +24,9 @@ test('2, [2], -1', () => {
     expect(solution(X, A)).toEqual(-1);
 });
 
-test('2, [2], 1', () => {
+test('2, [2,1], 1', () => {
     const X = 2;
-    const A = [2];
+    const A = [2,1];
     expect(solution(X, A)).toEqual(1);
 });
 
