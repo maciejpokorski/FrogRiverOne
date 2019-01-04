@@ -1,49 +1,42 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = solution;
 
 /**
-* Determine if exist path from starting position to destination jumping over given leaves - positions
-* @param  {Array<number>} possiblePositions - resents the position where one leaf falls at time K, measured in seconds. possiblePositions[K]
-* @param  {number} destinationPosition - where frog want to be
-* @returns {boolean} - if is possible to get into destinationPosition on this river leaves - possiblePositions
+* Check if value already exist in path to avoid duplicates
+* @param  {Array<number>} path - array represents distinst leaves possition where frog can jump
+* @param  {number} position - represents the second when leaf occur
+* @returns if the possition is already marked in path
 */
-function isPath(possiblePositions, destinationPosition) {
-    var increment = 1,
-        startingPosition = 1;
+var isNotInPathYet = function isNotInPathYet(path, position) {
+  return !path[position];
+};
 
-    for (var i = startingPosition; i <= destinationPosition; i += increment) {
-        if (!possiblePositions.includes(i)) {
-            return false;
-        }
-    }
-
-    return true;
-}
 /**
- * @param  {Array<number>} possiblePositions - resents the position where one leaf falls at time K, measured in seconds. possiblePositions[K]
- * @param  {number} destinationPosition - where frog want to be
- * @returns {number} i - earlies jump point
+ * Mark given position as ready to jump.
+ * @param  {Array<number>} path - array represents distinst leaves possition where frog can jump
+ * @param  {number} position - represents the second when leaf occur
+ * @param  {number} markedJumpReadyIndicator - any number interpreted as truthy
+ * @returns Here work on reference.
  */
-function calculateEarliestJumpPoint(possiblePositions, destinationPosition) {
-    var increment = 1;
-    var testPathArray = [],
-        result = -1;
+var addToPath = function addToPath(path, position) {
+  var markedJumpReadyIndicator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  return path[position] = markedJumpReadyIndicator;
+};
 
-    for (var i = 0; i < possiblePositions.length; i += increment) {
-        testPathArray.push(possiblePositions[i]);
+/**
+ * Check if all leaves to make path between starting point and destination are added
+ * @param  {number} pointsToCreatePath - number of points
+ * @param  {number} destination - resents the number of distinct leaves neccessary to jump
+ * @returns boolean - determine if frog can start to jump
+ */
+var canAlreadyJump = function canAlreadyJump(pointsToCreatePath, destination) {
+  return pointsToCreatePath === destination;
+};
 
-        if (isPath(testPathArray, destinationPosition)) {
-            result = i;
-            break;
-        }
-    }
-
-    return result;
-}
 /**
  * Returns earliest second where frog can start to cross river by jumping o leafs. If it is impossible returns -1
  * @param  {number} X - where frog want to be
@@ -51,14 +44,28 @@ function calculateEarliestJumpPoint(possiblePositions, destinationPosition) {
  * @returns number - earliest second where frog can start jump, if impossible returns -1
  */
 function solution(X, A) {
-    var NO_SOLUTION = -1;
-    var possiblePositions = A,
-        destinationPosition = X;
+  var NO_SOLUTION = -1,
+      INCREMENT = 1,
+      path = [],
+      possiblePositions = A,
+      DESTINATION = X;
+  var leavesToCreatePath = 0;
 
-    var pathExist = isPath(possiblePositions, destinationPosition);
-    if (destinationPosition && pathExist) {
-        return calculateEarliestJumpPoint(possiblePositions, destinationPosition);
+  //loope over possible possition
+  for (var second = 0; second < possiblePositions.length; second += INCREMENT) {
+    var position = possiblePositions[second];
+
+    if (isNotInPathYet(path, position)) {
+
+      addToPath(path, position);
+      leavesToCreatePath += 1;
+
+      if (canAlreadyJump(leavesToCreatePath, DESTINATION)) {
+        var soonestPossibleJumpMoment = second;
+        return soonestPossibleJumpMoment;
+      }
     }
+  }
 
-    return NO_SOLUTION;
+  return NO_SOLUTION;
 }

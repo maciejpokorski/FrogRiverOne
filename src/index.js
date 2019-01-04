@@ -2,55 +2,61 @@
  // @flow
 
  /**
- * Determine if exist path from starting position to destination jumping over given leaves - positions
- * @param  {Array<number>} possiblePositions - resents the position where one leaf falls at time K, measured in seconds. possiblePositions[K]
- * @param  {number} destinationPosition - where frog want to be
- * @returns {boolean} - if is possible to get into destinationPosition on this river leaves - possiblePositions
+ * Check if value already exist in path to avoid duplicates
+ * @param  {Array<number>} path - array represents distinst leaves possition where frog can jump
+ * @param  {number} position - represents the second when leaf occur
+ * @returns if the possition is already marked in path
  */
-function isPath(possiblePositions : Array<number>, destinationPosition : number) : boolean{
-    const increment = 1,
-    startingPosition = 1;
+const isNotInPathYet = (path : Array<number>, position : number) : boolean => !path[position];
 
-    for(let i = startingPosition; i <= destinationPosition; i+= increment){
-        if(!possiblePositions.includes(i)){
-            return false;
-        }
-    }
-
-    return true;
-}
 /**
- * @param  {Array<number>} possiblePositions - resents the position where one leaf falls at time K, measured in seconds. possiblePositions[K]
- * @param  {number} destinationPosition - where frog want to be
- * @returns {number} i - earlies jump point
+ * Mark given position as ready to jump.
+ * @param  {Array<number>} path - array represents distinst leaves possition where frog can jump
+ * @param  {number} position - represents the second when leaf occur
+ * @param  {number} markedJumpReadyIndicator - any number interpreted as truthy
+ * @returns Here work on reference.
  */
-function calculateEarliestJumpPoint(possiblePositions : Array<number>, destinationPosition : number) : number{
-    const increment = 1;
-    let testPathArray = [];
-    
-    for(let i = 0; i < possiblePositions.length; i+=increment){
-        testPathArray.push(possiblePositions[i]);
+const addToPath = (path : Array<number>, position : number, markedJumpReadyIndicator = 1) => path[position] = markedJumpReadyIndicator;
 
-        if(isPath(testPathArray, destinationPosition)){
-            return i;
-        }
-    }
-}
 /**
- * Returns earliest second where frog can start to cross river by jumping o leafs. If it is impossible returns -1
+ * Check if all leaves to make path between starting point and destination are added
+ * @param  {number} pointsToCreatePath - number of points
+ * @param  {number} destination - resents the number of distinct leaves neccessary to jump
+ * @returns boolean - determine if frog can start to jump
+ */
+const canAlreadyJump = (pointsToCreatePath : number, destination : number) : boolean => pointsToCreatePath === destination;
+
+/**
+ * Returns earliest second where frog can start to cross river by jumping the leaves.
+ * If it is impossible returns -1
+ * time complexity O(N)
  * @param  {number} X - where frog want to be
  * @param  {Array<number>} A - resents the position where one leaf falls at time K, measured in seconds. possiblePositions[K]
  * @returns number - earliest second where frog can start jump, if impossible returns -1
  */
 export default function solution(X : number, A : Array<number>) : number {
-    const NO_SOLUTION = -1;
-    const possiblePositions = A,
-    destinationPosition = X;
+    const NO_SOLUTION = -1,
+    INCREMENT = 1,
+    path = [],
+    possiblePositions = A,
+    DESTINATION = X;
+    let leavesToCreatePath = 0;
     
-    const pathExist = isPath(possiblePositions, destinationPosition);
-    if(destinationPosition && pathExist){
-        return calculateEarliestJumpPoint(possiblePositions, destinationPosition);
+    //loope over possible possition
+    for(let second = 0; second < possiblePositions.length; second += INCREMENT){
+        let position = possiblePositions[second];
+
+        if(isNotInPathYet(path, position)){
+
+            addToPath(path, position);
+            leavesToCreatePath += 1;
+
+            if(canAlreadyJump(leavesToCreatePath, DESTINATION)){
+                const soonestPossibleJumpMoment = second;
+                return soonestPossibleJumpMoment;
+            }
+        }
     }
    
-    return NO_SOLUTION
+    return NO_SOLUTION;
 }
